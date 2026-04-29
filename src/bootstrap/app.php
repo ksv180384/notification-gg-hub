@@ -7,6 +7,14 @@ use Illuminate\Support\Env;
 
 // Ensure .env is loaded (required for APP_KEY, DB creds, etc).
 // Some minimal installs / custom bootstraps may not load it automatically.
+foreach (['APP_KEY'] as $key) {
+    // If the variable exists but is empty, Dotenv won't override it.
+    // Unset it so it can be populated from .env.
+    if (\getenv($key) === '') {
+        \putenv($key);
+        unset($_ENV[$key], $_SERVER[$key]);
+    }
+}
 \Dotenv\Dotenv::create(Env::getRepository(), dirname(__DIR__))->safeLoad();
 
 return Application::configure(basePath: dirname(__DIR__))
