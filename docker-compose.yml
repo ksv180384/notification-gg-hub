@@ -59,7 +59,8 @@ services:
       - ./docker/certbot/www:/var/www/certbot
       - ./docker/certbot/conf:/etc/letsencrypt
     # Renew certificates twice a day (Let’s Encrypt recommendation).
-    entrypoint: /bin/sh -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h; done"
+    # Use `command` (not entrypoint) so `docker compose run certbot certonly ...` works.
+    command: /bin/sh -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h; done"
 
 volumes:
   dbdata:
