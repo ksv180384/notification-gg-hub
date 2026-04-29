@@ -1,0 +1,8 @@
+.git
+.idea
+node_modules
+vendor
+src/node_modules
+src/vendor
+src/storage/logs
+src/.env

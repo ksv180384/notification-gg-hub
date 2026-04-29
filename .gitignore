@@ -1,0 +1,30 @@
+# IDE / editors
+.idea/
+.vscode/
+.zed/
+.cursor/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local env / secrets
+.env
+.env.*
+!.env.example
+!.env.docker.example
+
+# Docker local overrides
+docker-compose.override.yml
+
+# Logs
+*.log
+
+# Laravel app lives in ./src (it has its own .gitignore too)
+src/.env
+src/.env.*
+src/vendor/
+src/node_modules/
+src/public/build/
+src/public/hot
+src/public/storage
