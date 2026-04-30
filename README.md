@@ -79,22 +79,22 @@ NGINX_CONF=prod.conf docker compose up -d nginx certbot
 
 ## Webhook -> Telegram
 
-Эндпоинт (принимает запрос со стороннего сервера):
+Эндпоинт (принимает запрос со стороннего сервера и пересылает сообщение в Telegram):
 
-- `POST http://localhost:8080/api/telegram-log`
+- `POST http://localhost:8080/api/notifications`
 
 Требуемые переменные в `src/.env`:
 
-- `TELEGRAM_LOGGER_TOKEN`
-- `TELEGRAM_LOGGER_CHAT_ID`
-- `TELEGRAM_LOGGER_INGRESS_TOKEN` (секрет для защиты входящего запроса)
-- `TELEGRAM_LOGGER_ALLOWED_IPS` (опционально, allowlist IP/CIDR)
+- `TELEGRAM_LOGGER_TOKEN` — токен Telegram-бота (исходящий вызов в Telegram Bot API)
+- `TELEGRAM_LOGGER_CHAT_ID` — ID чата, куда уходит сообщение
+- `NOTIFICATION_HUB_INGRESS_TOKEN` — секрет для защиты входящего запроса
+- `NOTIFICATION_HUB_ALLOWED_IPS` — опционально, allowlist IP/CIDR
 
 Пример (curl):
 
 ```bash
-curl -X POST "http://localhost:8080/api/telegram-log" \
-  -H "X-Telegram-Logger-Token: <your-ingress-token>" \
+curl -X POST "http://localhost:8080/api/notifications" \
+  -H "X-Notification-Hub-Token: <your-ingress-token>" \
   -H "Content-Type: application/json" \
   -d '{"message":"hello from webhook"}'
 ```
@@ -102,8 +102,8 @@ curl -X POST "http://localhost:8080/api/telegram-log" \
 Пример (PowerShell):
 
 ```powershell
-Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/telegram-log" `
-  -Headers @{ "X-Telegram-Logger-Token" = "<your-ingress-token>" } `
+Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/notifications" `
+  -Headers @{ "X-Notification-Hub-Token" = "<your-ingress-token>" } `
   -ContentType "application/json" `
   -Body '{"message":"hello from webhook"}'
 ```

@@ -6,19 +6,19 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\IpUtils;
 
-class VerifyTelegramLogIngress
+class VerifyNotificationIngress
 {
     /**
      * @param  Closure(Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next)
     {
-        $expectedToken = (string) env('TELEGRAM_LOGGER_INGRESS_TOKEN', '');
+        $expectedToken = (string) env('NOTIFICATION_HUB_INGRESS_TOKEN', '');
 
         if ($expectedToken === '') {
             return response()->json([
                 'ok' => false,
-                'error' => 'Ingress token is not configured. Set TELEGRAM_LOGGER_INGRESS_TOKEN in .env',
+                'error' => 'Ingress token is not configured. Set NOTIFICATION_HUB_INGRESS_TOKEN in .env',
             ], 500);
         }
 
@@ -31,7 +31,7 @@ class VerifyTelegramLogIngress
             ], 401);
         }
 
-        $allowedIpsRaw = (string) env('TELEGRAM_LOGGER_ALLOWED_IPS', '');
+        $allowedIpsRaw = (string) env('NOTIFICATION_HUB_ALLOWED_IPS', '');
         $allowedIps = $this->parseAllowedIps($allowedIpsRaw);
 
         if ($allowedIps !== []) {
@@ -51,7 +51,7 @@ class VerifyTelegramLogIngress
 
     private function extractToken(Request $request): ?string
     {
-        $headerToken = $request->header('X-Telegram-Logger-Token');
+        $headerToken = $request->header('X-Notification-Hub-Token');
         if (is_string($headerToken) && $headerToken !== '') {
             return $headerToken;
         }
@@ -86,4 +86,3 @@ class VerifyTelegramLogIngress
         return $parts;
     }
 }
-

@@ -1,9 +1,8 @@
 <?php
 
-use App\Http\Controllers\TelegramLogController;
-use App\Http\Middleware\VerifyTelegramLogIngress;
+use App\Http\Controllers\NotificationController;
+use App\Http\Middleware\VerifyNotificationIngress;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/telegram-log', TelegramLogController::class)
-    ->middleware(VerifyTelegramLogIngress::class);
-
+Route::post('/notifications', NotificationController::class)
+    ->middleware(VerifyNotificationIngress::class);

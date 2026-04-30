@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
 
-class TelegramLogController extends Controller
+class NotificationController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
@@ -58,4 +58,3 @@ class TelegramLogController extends Controller
         ]);
     }
 }
-
