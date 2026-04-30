@@ -13,7 +13,7 @@ class VerifyNotificationIngress
      */
     public function handle(Request $request, Closure $next)
     {
-        $expectedToken = (string) env('NOTIFICATION_HUB_INGRESS_TOKEN', '');
+        $expectedToken = (string) config('notification.ingress.token', '');
 
         if ($expectedToken === '') {
             return response()->json([
@@ -31,7 +31,7 @@ class VerifyNotificationIngress
             ], 401);
         }
 
-        $allowedIpsRaw = (string) env('NOTIFICATION_HUB_ALLOWED_IPS', '');
+        $allowedIpsRaw = (string) config('notification.ingress.allowed_ips', '');
         $allowedIps = $this->parseAllowedIps($allowedIpsRaw);
 
         if ($allowedIps !== []) {

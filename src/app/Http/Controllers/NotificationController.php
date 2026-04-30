@@ -17,8 +17,8 @@ class NotificationController extends Controller
             'disable_web_page_preview' => ['sometimes', 'boolean'],
         ]);
 
-        $token = (string) env('TELEGRAM_LOGGER_TOKEN', '');
-        $chatId = (string) env('TELEGRAM_LOGGER_CHAT_ID', '');
+        $token = (string) config('notification.telegram.token', '');
+        $chatId = (string) config('notification.telegram.chat_id', '');
 
         if ($token === '' || $chatId === '') {
             return response()->json([
