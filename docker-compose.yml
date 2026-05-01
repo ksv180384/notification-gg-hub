@@ -5,6 +5,7 @@ services:
       dockerfile: docker/php/Dockerfile
     container_name: ${APP_NAME:-notification-gg-hub}-app
     working_dir: /var/www/html
+    restart: unless-stopped
     volumes:
       - ./src:/var/www/html
     env_file:
@@ -20,6 +21,7 @@ services:
   nginx:
     image: nginx:latest
     container_name: ${APP_NAME:-notification-gg-hub}-nginx
+    restart: unless-stopped
     ports:
       - "${HTTP_PORT:-8080}:80"
       - "${HTTPS_PORT:-8443}:443"
@@ -39,6 +41,7 @@ services:
   db:
     image: mysql:latest
     container_name: ${APP_NAME:-notification-gg-hub}-mysql
+    restart: unless-stopped
     ports:
       - "${DB_PORT_FORWARD:-3306}:3306"
     env_file:
@@ -55,14 +58,16 @@ services:
 
   certbot:
     image: certbot/certbot:latest
+    container_name: ${APP_NAME:-notification-gg-hub}-certbot
+    restart: unless-stopped
     volumes:
       - ./docker/certbot/www:/var/www/certbot
       - ./docker/certbot/conf:/etc/letsencrypt
-    # Renew certificates twice a day (Let’s Encrypt recommendation).
+    # Renew certificates twice a day (Let's Encrypt recommendation).
     # Run a renew loop. We set a shell entrypoint because this image defaults to entrypoint "certbot".
     # For one-shot issuance use: `docker compose run --rm --entrypoint certbot certbot certonly ...`
     entrypoint: /bin/sh
-    command: -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h; done"
+    command: -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot || echo \"[certbot] renew failed at $$(date -u +%FT%TZ)\"; sleep 12h & wait $${!}; done"
 
 volumes:
   dbdata:
